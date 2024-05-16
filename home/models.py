@@ -28,15 +28,15 @@ class Ad(models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=500)
     image = models.ImageField(upload_to='media')
-    rank=models.ImageField()
+    rank=models.IntegerField()
     def __str__(self):
         return self.name
 STOCK=(('in_stock','In_Stock'),('out of stock','Out of Stock'))
 LABELS=(('','default'),('new','New'),('sale','Sale'),('hot','Hot'))
 class Product(models.Model):
     name = models.CharField(max_length=500)
-    price=models.ImageField()
-    discounted_price=models.ImageField(default=0)
+    price=models.IntegerField()
+    discounted_price=models.IntegerField(default=0)
     image=models.ImageField(upload_to='media')
     description=models.TextField(blank=True)
     specification=models.TextField(blank=True)
