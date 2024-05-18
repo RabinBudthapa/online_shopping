@@ -21,7 +21,7 @@ class Ad(models.Model):
     name = models.CharField(max_length=500)
     image = models.ImageField(upload_to='media')
     description=models.TextField()
-    rank=models.ImageField()
+    rank=models.IntegerField()
     def __str__(self):
         return self.name
 
@@ -32,7 +32,7 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 STOCK=(('in_stock','In_Stock'),('out of stock','Out of Stock'))
-LABELS=(('','default'),('new','New'),('sale','Sale'),('hot','Hot'))
+LABELS=(('','default'),('new','new'),('sale','sale'),('hot','hot'))
 class Product(models.Model):
     name = models.CharField(max_length=500)
     price=models.IntegerField()
@@ -45,4 +45,12 @@ class Product(models.Model):
     stock = models.CharField(choices=STOCK,max_length=50)
     labels=models.CharField(choices=LABELS,max_length=50)
 
-
+    def __str__(self):
+        return self.name
+class CustomerReview(models.Model):
+    name=models.TextField(max_length=500)
+    post=models.TextField(max_length=500)
+    image=models.ImageField(upload_to='media')
+    comment=models.TextField(max_length=500,blank=True)
+    def __str__(self):
+        return self.name
