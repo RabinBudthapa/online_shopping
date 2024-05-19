@@ -29,6 +29,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=500)
     image = models.ImageField(upload_to='media')
     rank=models.IntegerField()
+    slug = models.CharField(max_length=500,default="")
     def __str__(self):
         return self.name
 STOCK=(('in_stock','In_Stock'),('out of stock','Out of Stock'))
@@ -44,6 +45,7 @@ class Product(models.Model):
     brand=models.ForeignKey(Brand,on_delete=models.CASCADE)
     stock = models.CharField(choices=STOCK,max_length=50)
     labels=models.CharField(choices=LABELS,max_length=50)
+    slug = models.CharField(max_length=500, default="")
 
     def __str__(self):
         return self.name
