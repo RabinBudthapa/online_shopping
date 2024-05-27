@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-        
+
         <!-- Breadcrumb Start -->
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
@@ -13,7 +13,7 @@
             </div>
         </div>
         <!-- Breadcrumb End -->
-        
+
         <!-- Product Detail Start -->
         <div class="product-detail">
             <div class="container-fluid">
@@ -64,7 +64,7 @@
                                                 <button type="button" class="btn">M</button>
                                                 <button type="button" class="btn">L</button>
                                                 <button type="button" class="btn">XL</button>
-                                            </div> 
+                                            </div>
                                         </div>
                                         <div class="p-color">
                                             <h4>Color:</h4>
@@ -72,7 +72,7 @@
                                                 <button type="button" class="btn">White</button>
                                                 <button type="button" class="btn">Black</button>
                                                 <button type="button" class="btn">Blue</button>
-                                            </div> 
+                                            </div>
                                         </div>
                                         <div class="action">
                                             <a class="btn" href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a>
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row product-detail-bottom">
                             <div class="col-lg-12">
                                 <ul class="nav nav-pills nav-justified">
@@ -110,49 +110,51 @@
                                            {{detail.specification}}
                                         </ul>
                                     </div>
-                                    <div id="reviews" class="container tab-pane fade">
+                                     <div id="reviews" class="container tab-pane fade">
+                                        {% for review in product_reviews %}
                                         <div class="reviews-submitted">
-                                            <div class="reviewer">Phasellus Gravida - <span>01 Jan 2020</span></div>
+                                            <div class="reviewer">{{review.username}} - <span>{{review.date}}</span></div>
                                             <div class="ratting">
+                                                {% for i in 1|ljust:review.star %}
                                                 <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
+                                                {% endfor %}
                                             </div>
                                             <p>
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
+                                                {{review.comment}}
                                             </p>
                                         </div>
+                                        {% endfor %}
+                                        {% if user.is_authenticated %}
+                                        <form action = '/product_review/{{product.slug}}' method = 'POST'>
+                                            {% csrf_token %}
                                         <div class="reviews-submit">
                                             <h4>Give your Review:</h4>
-                                            <div class="ratting">
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                                <i class="far fa-star"></i>
-                                            </div>
+                                           <label for="stars">Choose a car:</label>
+
+                                            <select name="star" id="stars">
+                                              <option value="5">5</option>
+                                              <option value="4">4</option>
+                                              <option value="3">3</option>
+                                              <option value="2">2</option>
+                                                <option value="1">1</option>
+                                            </select>
                                             <div class="row form">
-                                                <div class="col-sm-6">
-                                                    <input type="text" placeholder="Name">
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <input type="email" placeholder="Email">
+                                                <div class="col-sm-12">
+                                                    <textarea placeholder="Review" name = "comment"></textarea>
                                                 </div>
                                                 <div class="col-sm-12">
-                                                    <textarea placeholder="Review"></textarea>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <button>Submit</button>
+                                                    <button type = "submit">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
+                                        </form>
+                                        {% endif %}
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="product">
                             <div class="section-header">
                                 <h1>Related Products</h1>
@@ -198,7 +200,7 @@
                         </div>
                     </div>
                     {% endfor %}
-                    
+
                     <!-- Side Bar Start -->
                     <div class="col-lg-4 sidebar">
                         <div class="sidebar-widget category">
@@ -223,7 +225,7 @@
                                 </ul>
                             </nav>
                         </div>
-                        
+
                         <div class="sidebar-widget widget-slider">
                             <div class="sidebar-slider normal-slider">
                                 {% for sale in sales %}
@@ -260,7 +262,7 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        
+
                         <div class="sidebar-widget brands">
                             <h2 class="title">Our Brands</h2>
                             <ul>
@@ -269,7 +271,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                        
+
                         <div class="sidebar-widget tag">
                             <h2 class="title">Tags Cloud</h2>
                             <a href="#">Lorem ipsum</a>
@@ -291,7 +293,7 @@
             </div>
         </div>
         <!-- Product Detail End -->
-        
+
         <!-- Brand Start -->
         <div class="brand">
             <div class="container-fluid">
@@ -306,5 +308,5 @@
             </div>
         </div>
         <!-- Brand End -->
-        
+
        {% endblock %}

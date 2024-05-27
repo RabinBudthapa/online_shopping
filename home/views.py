@@ -47,8 +47,26 @@ class ProductDetail(Base):
         self.views['sales'] = Product.objects.filter(labels='sale')
         product_category = Product.objects.get(slug=slug).category_id
         self.views['related_products'] = Product.objects.filter(category_id = product_category)
-        self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count
+        self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count()
+        self.views['product_reviews'] = ProductReview.objects.filter(slug=slug)
         return render(request,'product-detail.html',self.views)
+
+def product_review(request,slug):
+    if Product.objects.filter(slug = slug):
+        if request.method == 'POST':
+            username = request.user.username
+            star = request.POST['star']
+            comment = request.POST['comment']
+            ProductReview.objects.create(
+                username = username,
+                slug = slug,
+                star = star,
+                comment = comment
+            ).save()
+    else:
+        return redirect(f'/product/{slug}')
+    return redirect(f'/product/{slug}')
+
 
 
 class SearchView(Base):
