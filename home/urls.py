@@ -17,5 +17,10 @@ urlpatterns = [
     path('reduce_cart/<slug>', reduce_cart, name='reduce_cart'),
     path('delete_cart/<slug>', delete_cart, name='delete_cart'),
     path('product_review/<slug>', product_review, name='product_review'),
+    path('product_review/<slug>', product_review, name='product_review'),
+    path('wishlist', WishlistView.as_view(), name='wishlist'),
+    path('add_to_wishlist/<slug>', add_to_wishlist, name='add_to_wishlist'),
+    path('delete_wishlist/<slug>', delete_wishlist, name='delete_wishlist'),
+    path('checkout', CheckoutView.as_view(), name='checkout'),
 
 ]

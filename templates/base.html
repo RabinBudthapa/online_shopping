@@ -53,7 +53,7 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
+                            <a href="/" class="nav-item nav-link active">Home</a>
                         </div>
                         <div class="navbar-nav ml-auto">
                             {% if user.is_authenticated %}
@@ -100,11 +100,11 @@
                     </div>
                     <div class="col-md-3">
                         <div class="user">
-                            <a href="wishlist.html" class="btn wishlist">
+                            <a href="/wishlist" class="btn wishlist">
                                 <i class="fa fa-heart"></i>
-                                <span></span>
+                                <span>{{count_wishlist}}</span>
                             </a>
-                            <a href="cart.html" class="btn cart">
+                            <a href="/cart" class="btn cart">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>{{count_cart}}</span>
                             </a>

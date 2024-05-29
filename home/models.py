@@ -68,6 +68,15 @@ class Cart(models.Model):
     def __str__(self):
         return self.username
 
+class Wishlist(models.Model):
+    username = models.CharField(max_length=300)
+    slug = models.CharField(max_length=500)
+    items = models.ForeignKey(Product,on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    checkout = models.BooleanField(default=False)
+    def __str__(self):
+        return self.username
+
 class ProductReview(models.Model):
     username = models.CharField(max_length=300)
     slug = models.CharField(max_length=500)
@@ -77,3 +86,14 @@ class ProductReview(models.Model):
 
     def __str__(self):
         return self.username
+
+class CustomerAddress(models.Model):
+    firstname = models.CharField(max_length=500)
+    lastname = models.CharField(max_length=500)
+    email = models.EmailField(max_length=500)
+    phonenumber = models.CharField(max_length=500)
+    address = models.CharField(max_length=500)
+    def __str__(self):
+        return self.firstname
+
+

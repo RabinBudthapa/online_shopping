@@ -19,6 +19,7 @@ class HomeView(Base):
         self.views['reviews'] = CustomerReview.objects.all()
         self.views['ads']=Ad.objects.all()
         self.views['count_cart'] = Cart.objects.filter(username = request.user.username,checkout = False).count
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
         return render(request,'index.html',self.views)
 
 class CategoryView(Base):
@@ -29,6 +30,7 @@ class CategoryView(Base):
         self.views['brands'] = Brand.objects.all()
         self.views['sales'] = Product.objects.filter(labels='sale')
         self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
         return render(request,'category.html',self.views)
 
 class BrandView(Base):
@@ -48,7 +50,9 @@ class ProductDetail(Base):
         product_category = Product.objects.get(slug=slug).category_id
         self.views['related_products'] = Product.objects.filter(category_id = product_category)
         self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count()
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
         self.views['product_reviews'] = ProductReview.objects.filter(slug=slug)
+        self.views['categories'] = Category.objects.all()
         return render(request,'product-detail.html',self.views)
 
 def product_review(request,slug):
@@ -81,6 +85,7 @@ class SearchView(Base):
         self.views['brands'] = Brand.objects.all()
         self.views['sales'] = Product.objects.filter(labels='sale')
         self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
         return render(request,'search.html',self.views)
 
 
@@ -113,10 +118,42 @@ def signup(request):
             return redirect('/signup')
     return render(request,'signup.html')
 
+
+
+class WishlistView(Base):
+    def get(self, request):
+        username = request.user.username
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
+        self.views['my_wishlist'] = Wishlist.objects.filter(username=username)
+        return render(request, 'wishlist.html', self.views)
+
+def add_to_wishlist(request,slug):
+        username = request.user.username
+        if Wishlist.objects.filter(username=username, slug=slug, checkout=False):
+            return redirect('/wishlist')
+
+        else:
+          data = Wishlist.objects.create(
+            username=username,
+            slug=slug,
+            items=Product.objects.filter(slug=slug)[0]
+          )
+          data.save()
+          return redirect('/wishlist')
+
+def delete_wishlist(request,slug):
+    username = request.user.username
+    if Wishlist.objects.filter(slug = slug,username = username,checkout = False):
+        Wishlist.objects.filter(slug = slug, username = username, checkout = False).delete()
+    return redirect('/wishlist')
+
+
+
 class CartView(Base):
     def get(self,request):
         username = request.user.username
         self.views['count_cart'] = Cart.objects.filter(username=request.user.username, checkout=False).count
+        self.views['count_wishlist'] = Wishlist.objects.filter(username=request.user.username, checkout=False).count
         self.views['my_cart'] = Cart.objects.filter(username = username)
         my_cart = Cart.objects.filter(username=username,checkout=False)
         s = 0
@@ -134,7 +171,7 @@ def add_to_cart(request,slug):
     if Cart.objects.filter(username = username,slug = slug,checkout = False):
         price = Product.objects.get(slug = slug).price
         discounted_price = Product.objects.get(slug=slug).discounted_price
-        quantity = Cart.objects.get(slug=slug).quantity
+        quantity = Cart.objects.get(slug = slug).quantity
         quantity = quantity + 1
         if discounted_price > 0:
             total = discounted_price * quantity
@@ -191,6 +228,9 @@ def reduce_cart(request,slug):
               total=total,
           )
           return redirect('/cart')
+        else:
+            return redirect('/cart')
+
 
 def login_user (request):
 	if request.method == 'POST':
@@ -211,6 +251,13 @@ def logout_user(request):
 	logout(request)
 	messages.success(request,('Youre now logged out'))
 	return redirect('/')
+
+
+class CheckoutView(Base):
+    def get(self,request):
+        username = request.user.username
+        self.views['checkouts'] = Cart.objects.filter(username=username)
+        return render(request,'checkout.html',self.views)
 
 
 
